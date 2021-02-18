@@ -1,4 +1,6 @@
 const uuid = require('uuid')
+const axios = require('axios')
+
 const models = require('../../models')
 
 module.exports = {
@@ -39,7 +41,11 @@ module.exports = {
       })
       return
     }
-    
+
+    const { status } = await axios.get(business.businessCallbackUrl)
+
+    payload.callbackResponseCode = status
+        
     try {
       const callback = await models.Callback.create(payload)
       res.status(200).json({
