@@ -16,13 +16,6 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      businessId: {
-        type: Sequelize.UUID,
-        references: {
-          model: 'Businesses',
-          key: 'id'
-        }
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

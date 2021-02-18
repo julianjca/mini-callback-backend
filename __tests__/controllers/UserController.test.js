@@ -8,7 +8,7 @@ const models = require('../../models')
 
 const { login, create, authenticate } = require('../../src/controllers/users')
 
-describe('Business controller', () => {
+describe('User controller', () => {
   it('should create a user', async () => {
     const mock = jest.spyOn(models.User, 'create').mockResolvedValueOnce({});
     const findOneMock = jest.spyOn(models.User, 'findOne').mockResolvedValueOnce(null);
@@ -19,7 +19,6 @@ describe('Business controller', () => {
         name: 'John',
         email: 'john@mail.com',
         password: 'password',
-        businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
       }
     };
     const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
@@ -49,7 +48,6 @@ describe('Business controller', () => {
         name: 'John',
         email: 'john@mail.com',
         password: 'password',
-        businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
       }
     };
     const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
@@ -75,7 +73,6 @@ describe('Business controller', () => {
         name: 'John',
         email: 'john@mail.com',
         password: 'password',
-        businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
       }
     };
     const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
@@ -95,10 +92,6 @@ describe('Business controller', () => {
     const mock = jest.spyOn(models.User, 'findOne').mockImplementation(() => Promise.resolve({
       name: 'John',
       email: 'john@mail.com',
-      businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
-      business: {
-        businessName: 'Business Name'
-      }
     }));
     const argonMock = jest.spyOn(argon, 'verify').mockImplementation(() => Promise.resolve(true))
 
@@ -121,10 +114,6 @@ describe('Business controller', () => {
     const mock = jest.spyOn(models.User, 'findOne').mockImplementation(() => Promise.resolve({
       name: 'John',
       email: 'john@mail.com',
-      businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
-      business: {
-        businessName: 'Business Name'
-      }
     }));
     const argonMock = jest.spyOn(argon, 'verify').mockImplementation(() => Promise.resolve(false))
 
@@ -170,8 +159,6 @@ describe('Business controller', () => {
     const mock = jest.spyOn(jwt, 'verify').mockImplementation(() => Promise.resolve({
       "email": "john@mail.com",
       "name": "John",
-      "businessId": "a6e21744-7aa9-4118-b666-f9c1619bba2d",
-      "businessName": "Business 2",
       "iat": 1613638142
   }));
 
@@ -188,8 +175,6 @@ describe('Business controller', () => {
       "user": {
           "email": "john@mail.com",
           "name": "John",
-          "businessId": "a6e21744-7aa9-4118-b666-f9c1619bba2d",
-          "businessName": "Business 2",
           "iat": 1613638142
       },
       "message": "Authenticated."
@@ -202,8 +187,6 @@ describe('Business controller', () => {
     const mock = jest.spyOn(jwt, 'verify').mockImplementation(() => Promise.resolve({
       "email": "john@mail.com",
       "name": "John",
-      "businessId": "a6e21744-7aa9-4118-b666-f9c1619bba2d",
-      "businessName": "Business 2",
       "iat": 1613638142
   }));
 
