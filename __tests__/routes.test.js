@@ -48,26 +48,6 @@ describe('Main API is working', () => {
 })
 
 describe('Callbacks API', () => {
-  beforeAll(async () => {
-    await models.Business.create(business)
-    await models.Callback.create(callback)
-
-  });
-
-  afterAll(async () => {
-    // wipe db
-    await models.Callback.destroy({
-      where: {},
-      truncate: true
-    })
-
-    await models.Business.destroy({
-      where: {
-        id: business.id,
-      },
-    })
-  })
-
   it('Should return empty array when there is no data', async () => {
     const res = await request(app).get('/callbacks')
     expect(res.statusCode).toEqual(200)
@@ -126,24 +106,6 @@ describe('Callbacks API', () => {
 })
 
 describe('Businesses API', () => {
-  beforeAll(async () => {
-    await models.Business.create(business)
-    await models.Callback.create(callback)
-  });
-
-  afterAll(async () => {
-    // wipe db
-    await models.Callback.destroy({
-      where: {},
-      truncate: true
-    })
-
-    await models.Business.destroy({
-      where: {},
-      truncate: true
-    })
-  })
-
   it('Should return empty array when there is no data', async () => {
     const res = await request(app).get('/businesses')
     expect(res.statusCode).toEqual(200)
@@ -166,5 +128,22 @@ describe('Businesses API', () => {
     expect(res.statusCode).toEqual(200)
     expect(res.body.business.businessName).toEqual('new business')
     expect(res.body.business.businessCallbackUrl).toEqual('https://twitter.com')
+  })
+})
+
+beforeAll(async () => {
+  await models.Business.create(business)
+  await models.Callback.create(callback)
+});
+
+afterAll(async () => {
+  // wipe db
+  await models.Callback.destroy({
+    where: {},
+    truncate: true
+  })
+
+  await models.Business.destroy({
+    where: {},
   })
 })
