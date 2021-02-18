@@ -42,9 +42,15 @@ module.exports = {
       return
     }
 
-    const { status } = await axios.get(business.businessCallbackUrl)
+    try {
+      const { status } = await axios.get(business.businessCallbackUrl)
+      payload.callbackResponseCode = status
 
-    payload.callbackResponseCode = status
+    } catch (e) {
+      payload.callbackResponseCode = e.response.status
+    }
+
+
 
     try {
       const callback = await models.Callback.create(payload)

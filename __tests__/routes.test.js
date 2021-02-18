@@ -101,9 +101,11 @@ describe('Callbacks API', () => {
   })
 
   it('Should create a callback with callbackResponseCode 400', async () => {
-    axios.get.mockImplementation(() => Promise.resolve({
+    axios.get.mockImplementation(() => Promise.reject({
       data: [],
-      status: 400,
+      response: {
+        status: 400,
+      }
     }))
 
     const res = await request(app).post('/callbacks').send(body)

@@ -129,5 +129,31 @@ describe('Callback controller', () => {
     mock.mockRestore()
     businessMock.mockRestore()
   });
+
+  it('should create a callback when everything is valid and business hook error.', async () => {
+    axios.get.mockImplementation(() => Promise.reject({ response: {
+      status: 400
+    }}))
+
+    const mock = jest.spyOn(models.Callback, 'create').mockImplementationOnce(() => Promise.resolve());
+    const businessMock = jest.spyOn(models.Business, 'findOne').mockImplementationOnce(() => Promise.resolve( true ));
+
+    const mReq = { 
+      body: {
+        "virtual_account": "1234",
+        "bank_code": "BANK_JAGO",
+        "timestamp": "2021-02-18T03:13:01.411Z",
+        "transaction_id": "123",
+        "business_id": "2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f"
+    }};
+
+    const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await create(mReq, mRes);
+    
+    expect(mRes.status).toBeCalledWith(200);
+
+    mock.mockRestore()
+    businessMock.mockRestore()
+  });
 })
 
