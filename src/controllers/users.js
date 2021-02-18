@@ -12,11 +12,6 @@ module.exports = {
       where: {
         email,
       },
-      include: {
-        model: models.Business,
-        as: 'business',
-        attributes:['businessName']
-      },
     })
 
     if(user) {
@@ -26,8 +21,6 @@ module.exports = {
         const userData = {
           email: user.email,
           name: user.name,
-          businessId: user.businessId,
-          businessName: user.business.businessName,
         }
         const accessToken = jwt.sign(userData, accessTokenSecret);
 
@@ -48,7 +41,7 @@ module.exports = {
     }
   },
   async create (req, res) {
-    const { name, email, password, businessId } = req.body
+    const { name, email, password } = req.body
     const hash = await argon2.hash(password);
 
     const user = await models.User.findOne({
@@ -62,7 +55,6 @@ module.exports = {
         await models.User.create({
           name,
           email,
-          businessId,
           password: hash,
           id: uuid.v4(),
           createdAt: new Date(),

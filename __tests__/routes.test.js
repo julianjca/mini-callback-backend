@@ -39,7 +39,6 @@ const userBody = {
   "name": "John",
   "email": "john@mail.com",
   "password": "password",
-  "businessId": "2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f"
 }
 
 afterAll(async () => {
@@ -161,8 +160,6 @@ describe('Users API', () => {
     expect(res.body.user).toEqual({
       email: 'john@mail.com',
       name: 'John',
-      businessId: '2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f',
-      businessName: 'new business'
     })
 
   })
@@ -184,8 +181,6 @@ describe('Users API', () => {
     expect(authenticateResponse.body.message).toEqual('Authenticated.')
     expect(authenticateResponse.body.user.name).toEqual('John')
     expect(authenticateResponse.body.user.email).toEqual('john@mail.com')
-    expect(authenticateResponse.body.user.businessId).toEqual('2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f')
-    expect(authenticateResponse.body.user.businessName).toEqual('new business')
   })
 })
 
