@@ -16,7 +16,10 @@ module.exports = {
       timestamp: {
         type: Sequelize.DATE
       },
-      business_id: {
+      callbackResponseCode: {
+        type: Sequelize.INTEGER
+      },
+      businessId: {
         type: Sequelize.UUID,
         references: {
           model: 'Businesses',

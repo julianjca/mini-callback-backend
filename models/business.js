@@ -4,7 +4,7 @@ const {
 module.exports = (sequelize, DataTypes) => {
   class Business extends Model {
     static associate(models) {
-      models.Business.hasMany(models.Callback, {foreignKey: 'business_id', as: 'callbacks'})
+      models.Business.hasMany(models.Callback, {foreignKey: 'businessId', as: 'callbacks'})
     }
   }
   Business.init({

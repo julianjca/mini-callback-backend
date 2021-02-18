@@ -6,6 +6,7 @@
     "start": "PORT=3030 nodemon ./bin/www",
     "test": "jest --detectOpenHandles",
     "migrate": "sequelize db:migrate",
+    "migrate-test": "NODE_ENV=test sequelize db:migrate",
     "seed": "sequelize db:seed:all",
     "coverage": "jest --detectOpenHandles --coverage"
   },
@@ -13,7 +14,7 @@
     "testEnvironment": "node",
     "coveragePathIgnorePatterns": [
       "/node_modules/",
-      "./models" 
+      "./models"
     ]
   },
   "engines": {
@@ -24,6 +25,7 @@
     "cors": "^2.8.5",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "express-validator": "^6.9.2",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
     "morgan": "~1.9.1",

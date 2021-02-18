@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
   Callback.init({
     virtual_account: DataTypes.STRING,
     bank_code: DataTypes.STRING,
-    timestamp: DataTypes.STRING,
+    timestamp: DataTypes.DATE,
     transaction_id: DataTypes.STRING,
-    business_id: DataTypes.STRING,
+    businessId: DataTypes.STRING,
+    callbackResponseCode: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Callback',
