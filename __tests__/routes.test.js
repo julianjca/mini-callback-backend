@@ -35,6 +35,13 @@ const businessBody = {
   businessCallbackUrl: 'https://google.com'
 }
 
+const userBody = {
+  "name": "John",
+  "email": "john@mail.com",
+  "password": "password",
+  "businessId": "2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f"
+}
+
 afterAll(async () => {
 	await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
 });
@@ -131,6 +138,48 @@ describe('Businesses API', () => {
   })
 })
 
+describe('Users API', () => {
+  it('Should be able to create user', async () => {
+    const res = await request(app).post('/users').send(userBody)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body).toEqual({
+      "message": "Success creating user.",
+      "user": {
+          "email": "john@mail.com",
+          "name": "John"
+      }
+    })
+  })
+
+  it('User should be able to login', async () => {
+    const res = await request(app).post('/users/login').send({
+      email: 'john@mail.com',
+      password: 'password'
+    })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.message).toEqual('Successfully logged in.')
+  })
+
+  it('should be able to authenticate JWT', async () => {
+    const res = await request(app).post('/users/login').send({
+      email: 'john@mail.com',
+      password: 'password'
+    })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.message).toEqual('Successfully logged in.')
+
+    const { accessToken } = res.body
+    const authenticateResponse = await request(app).get('/users/authenticate').set('Authorization', `Bearer ${accessToken}`)
+
+    expect(authenticateResponse.statusCode).toEqual(200)
+    expect(authenticateResponse.body.message).toEqual('Authenticated.')
+    expect(authenticateResponse.body.user.name).toEqual('John')
+    expect(authenticateResponse.body.user.email).toEqual('john@mail.com')
+    expect(authenticateResponse.body.user.businessId).toEqual('2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f')
+    expect(authenticateResponse.body.user.businessName).toEqual('new business')
+  })
+})
+
 beforeAll(async () => {
   await models.Business.create(business)
   await models.Callback.create(callback)
@@ -139,6 +188,11 @@ beforeAll(async () => {
 afterAll(async () => {
   // wipe db
   await models.Callback.destroy({
+    where: {},
+    truncate: true
+  })
+
+  await models.User.destroy({
     where: {},
     truncate: true
   })
