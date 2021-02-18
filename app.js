@@ -6,6 +6,7 @@ const logger = require('morgan');
 const cors = require('cors')
 
 const indexRouter = require('./src/routes/index');
+const callbackRouter = require('./src/routes/callbacks')
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/callbacks', callbackRouter)
 
 // const sequelize = new Sequelize('xenelectronic', 'postgres', 'postgres', {
 //   host: 'localhost',
