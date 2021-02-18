@@ -4,7 +4,6 @@ const { body } = require('express-validator');
 
 const { getAll, create } = require('../controllers/callbacks')
 
-/* GET home page. */
 router.get('/', getAll);
 router.post('/', 
   body('virtual_account').exists(), 
@@ -14,5 +13,6 @@ router.post('/',
   body('business_id').exists(),
   create,
 );
+
 
 module.exports = router;

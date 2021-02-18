@@ -7,6 +7,7 @@ const cors = require('cors')
 
 const indexRouter = require('./src/routes/index');
 const callbackRouter = require('./src/routes/callbacks')
+const businessRouter = require('./src/routes/businesses')
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/callbacks', callbackRouter)
+app.use('/businesses', businessRouter)
 
 // const sequelize = new Sequelize('xenelectronic', 'postgres', 'postgres', {
 //   host: 'localhost',
