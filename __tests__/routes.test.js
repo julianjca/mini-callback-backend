@@ -30,6 +30,11 @@ const body = {
   "business_id": "2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f"
 }
 
+const businessBody = {
+  businessName: 'Test',
+  businessCallbackUrl: 'https://google.com'
+}
+
 afterAll(async () => {
 	await new Promise(resolve => setTimeout(() => resolve(), 500)); // avoid jest open handle error
 });
@@ -66,6 +71,7 @@ describe('Callbacks API', () => {
   it('Should return empty array when there is no data', async () => {
     const res = await request(app).get('/callbacks')
     expect(res.statusCode).toEqual(200)
+
     expect(res.body.callbacks[0].bank_code).toEqual('BANK_ABC')
     expect(res.body.callbacks[0].businessId).toEqual('2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f')
     expect(res.body.callbacks[0].id).toEqual('e8980029-04a0-4b9c-8c64-182c8a81cc43')
@@ -119,3 +125,46 @@ describe('Callbacks API', () => {
   })
 })
 
+describe('Businesses API', () => {
+  beforeAll(async () => {
+    await models.Business.create(business)
+    await models.Callback.create(callback)
+  });
+
+  afterAll(async () => {
+    // wipe db
+    await models.Callback.destroy({
+      where: {},
+      truncate: true
+    })
+
+    await models.Business.destroy({
+      where: {},
+      truncate: true
+    })
+  })
+
+  it('Should return empty array when there is no data', async () => {
+    const res = await request(app).get('/businesses')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.businesses[0].businessName).toEqual('Test')
+    expect(res.body.businesses[0].businessCallbackUrl).toEqual('https://google.com')
+  })
+
+  it('Should return be able to create a business', async () => {
+    const res = await request(app).post('/businesses').send(businessBody)
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.business.businessName).toEqual('Test')
+    expect(res.body.business.businessCallbackUrl).toEqual('https://google.com')
+  })
+
+  it('Should return be able to update a business', async () => {
+    const res = await request(app).put('/businesses/2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f').send({
+      businessName: 'new business',
+      businessCallbackUrl: 'https://twitter.com'
+    })
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.business.businessName).toEqual('new business')
+    expect(res.body.business.businessCallbackUrl).toEqual('https://twitter.com')
+  })
+})
