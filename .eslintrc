@@ -1,0 +1,129 @@
+{
+  "extends": [
+      "eslint:recommended",
+      "plugin:node/recommended"
+  ],
+  "parserOptions": {
+      // Only ESLint 6.2.0 and later support ES2020.
+      "ecmaVersion": 2020
+  },
+  "plugins": [
+    "fp"
+  ],
+  "env": {
+    "commonjs": true,
+    "node": true,
+    "mocha": true,
+    "jest": true
+  },
+  "rules": {
+      "node/exports-style": ["error", "module.exports"],
+      "node/no-unpublished-require": "off",
+      "node/file-extension-in-import": ["error", "always"],
+      "node/prefer-global/buffer": ["error", "always"],
+      "node/prefer-global/console": ["error", "always"],
+      "node/prefer-global/process": ["error", "always"],
+      "node/prefer-global/url-search-params": ["error", "always"],
+      "node/prefer-global/url": ["error", "always"],
+      "node/prefer-promises/dns": "error",
+      "node/prefer-promises/fs": "error",
+      "no-cond-assign": "error",
+      "no-control-regex": "error",
+      "no-dupe-args": "error",
+      "no-dupe-keys": "error",
+      "no-duplicate-case": "error",
+      "no-empty": "error",
+      "no-empty-character-class": "error",
+      "no-ex-assign": "error",
+      "no-extra-parens": "off",
+      "no-extra-semi": "error",
+      "no-func-assign": "error",
+      "no-inner-declarations": "error",
+      "no-invalid-regexp": "error",
+      "no-irregular-whitespace": "error",
+      "no-negated-in-lhs": "error",
+      "no-obj-calls": "error",
+      "no-regex-spaces": "error",
+      "no-sparse-arrays": "error",
+      "no-unreachable": "error",
+      "use-isnan": "error",
+      "valid-jsdoc": "error",
+      "valid-typeof": "error",
+      "max-lines-per-function": "off",
+      "no-return-await": "error",
+      "block-scoped-var": "error",
+      "complexity": "error",
+      "consistent-return": "error",
+      "curly": "error",
+      "dot-notation": "error",
+      "eqeqeq": "error",
+      "guard-for-in": "error",
+      "no-caller": "error",
+      "no-div-regex": "error",
+      "no-else-return": "error",
+      "no-eq-null": "error",
+      "no-eval": "error",
+      "no-extend-native": "error",
+      "no-extra-bind": "error",
+      "no-floating-decimal": "error",
+      "no-implied-eval": "error",
+      "no-iterator": "error",
+      "no-labels": "error",
+      "no-lone-blocks": "error",
+      "no-loop-func": "error",
+      "no-multi-spaces": "error",
+      "no-native-reassign": "error",
+      "no-new": "error",
+      "no-new-func": "error",
+      "no-new-wrappers": "error",
+      "no-octal": "error",
+      "no-octal-escape": "error",
+      "no-proto": "error",
+      "no-redeclare": "error",
+      "no-script-url": "error",
+      "no-self-compare": "error",
+      "no-sequences": "error",
+      "no-throw-literal": "error",
+      "no-unused-expressions": "error",
+      "no-void": "error",
+      "no-warning-comments": [
+        "warn",
+        {
+          "terms": [
+            "todo",
+            "fixme"
+          ],
+          "location": "start"
+        }
+      ],
+      "no-with": "error",
+      "wrap-iife": "error",
+      "yoda": "error",
+      "strict": [
+        "error",
+        "never"
+      ],
+      "no-catch-shadow": "error",
+      "no-delete-var": "error",
+      "no-label-var": "error",
+      "no-shadow": "error",
+      "no-shadow-restricted-names": "error",
+      "no-undef": "error",
+      "no-undef-init": "error",
+      "no-undefined": "error",
+      "no-unused-vars": "error",
+      "no-use-before-define": "error",
+      "no-var": "error",
+      "prefer-const": [
+        "error",
+        {
+          "destructuring": "any"
+        }
+      ],
+      "prefer-arrow-callback": "error",
+      "func-style": [
+        "error",
+        "expression"
+      ]
+  }
+}
