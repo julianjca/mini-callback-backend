@@ -51,28 +51,40 @@ module.exports = {
     const { name, email, password, businessId } = req.body
     const hash = await argon2.hash(password);
 
-    try {
-      await models.User.create({
-        name,
+    const user = await models.User.findOne({
+      where: {
         email,
-        businessId,
-        password: hash,
-        id: uuid.v4(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      })
-      res.status(200).json({
-        message: 'Success creating user.',
-        user: {
-          email,
+      }
+    })
+
+    if (!user) {
+      try {
+        await models.User.create({
           name,
-        }
-      })
-    } catch(e) {
+          email,
+          businessId,
+          password: hash,
+          id: uuid.v4(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        })
+        res.status(200).json({
+          message: 'Success creating user.',
+          user: {
+            email,
+            name,
+          }
+        })
+      } catch(e) {
+        res.status(500).json({
+          message: 'Failed creating user.',
+        })
+      }
+    } else {
       res.status(500).json({
-        message: 'Failed creating user.',
+        message: 'Email has been used.',
       })
-    }
+    }   
   },
   async authenticate (req, res) {
     const authHeader = req.headers.authorization;

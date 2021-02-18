@@ -11,6 +11,7 @@ const { login, create, authenticate } = require('../../src/controllers/users')
 describe('Business controller', () => {
   it('should create a user', async () => {
     const mock = jest.spyOn(models.User, 'create').mockResolvedValueOnce({});
+    const findOneMock = jest.spyOn(models.User, 'findOne').mockResolvedValueOnce(null);
     const argonMock = jest.spyOn(argon, 'hash').mockImplementation(() => Promise.resolve('hashedpassword'))
 
     const mReq = {
@@ -34,11 +35,13 @@ describe('Business controller', () => {
   });
 
     mock.mockRestore()
+    findOneMock.mockRestore()
     argonMock.mockRestore()
   });
 
   it('should failed to create a user when there is an error from DB', async () => {
     const mock = jest.spyOn(models.User, 'create').mockImplementation(() => Promise.reject());
+    const findOneMock = jest.spyOn(models.User, 'findOne').mockResolvedValueOnce(null);
     const argonMock = jest.spyOn(argon, 'hash').mockImplementation(() => Promise.resolve('hashedpassword'))
 
     const mReq = {
@@ -58,6 +61,33 @@ describe('Business controller', () => {
     });
 
     mock.mockRestore()
+    findOneMock.mockRestore()
+    argonMock.mockRestore()
+  });
+
+  it('should failed to create a user when there is an email duplication', async () => {
+    const mock = jest.spyOn(models.User, 'create').mockImplementation(() => Promise.reject());
+    const findOneMock = jest.spyOn(models.User, 'findOne').mockResolvedValueOnce(true);
+    const argonMock = jest.spyOn(argon, 'hash').mockImplementation(() => Promise.resolve('hashedpassword'))
+
+    const mReq = {
+      body: {
+        name: 'John',
+        email: 'john@mail.com',
+        password: 'password',
+        businessId: '19b5eec0-1439-4598-bc73-c4580d04f45b',
+      }
+    };
+    const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await create(mReq, mRes);
+
+    expect(mRes.status).toBeCalledWith(500);
+    expect(mRes.json).toBeCalledWith({
+      message: 'Email has been used.',
+    });
+
+    mock.mockRestore()
+    findOneMock.mockRestore()
     argonMock.mockRestore()
   });
 
