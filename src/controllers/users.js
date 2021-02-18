@@ -19,23 +19,27 @@ module.exports = {
       },
     })
 
-
     if(user) {
       const isValid = await argon2.verify(user.password, password)
 
       if (isValid) {
-        const accessToken = jwt.sign({ 
-          name: user.name, 
-          email: user.email, 
-          businessName: user.business.businessName,
+        const userData = {
+          email: user.email,
+          name: user.name,
           businessId: user.businessId,
-        }, accessTokenSecret);
+          businessName: user.business.businessName,
+        }
+        const accessToken = jwt.sign(userData, accessTokenSecret);
 
         res.status(200).json({
-            accessToken,
-            message: 'Successfully logged in.',
+          accessToken,
+          message: 'Successfully logged in.',
+          user: userData,
         });
-
+      } else {
+        res.status(400).json({
+          message: 'Failed to logged in.',
+        });
       }
     } else {
       res.status(500).json({
@@ -65,7 +69,6 @@ module.exports = {
         }
       })
     } catch(e) {
-      console.log(e)
       res.status(500).json({
         message: 'Failed creating user.',
       })
@@ -74,25 +77,24 @@ module.exports = {
   async authenticate (req, res) {
     const authHeader = req.headers.authorization;
 
-  if (authHeader) {
-      const token = authHeader.split(' ')[1];
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
 
-      // eslint-disable-next-line consistent-return
-      jwt.verify(token, accessTokenSecret, (err, user) => {
-          if (err) {
-              return res.status(403).json({
-                message: 'Unauthorized'
-              });
-          }
-          return res.status(200).json({
+        try {
+          const user = await jwt.verify(token, accessTokenSecret)
+          res.status(200).json({
             user,
             message: 'Authenticated.',
           }) 
-      });
-  } else {
-      res.status(401).json({
-        message: 'Unauthorized.'
-      });
-  }
+        } catch {
+          res.status(403).json({
+            message: 'Unauthorized.'
+          });
+        }       
+    } else {
+        res.status(401).json({
+          message: 'Unauthorized.'
+        });
+    }
   },
 }

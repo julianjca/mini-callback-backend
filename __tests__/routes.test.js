@@ -158,9 +158,17 @@ describe('Users API', () => {
     })
     expect(res.statusCode).toEqual(200)
     expect(res.body.message).toEqual('Successfully logged in.')
+    expect(res.body.user).toEqual({
+      email: 'john@mail.com',
+      name: 'John',
+      businessId: '2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f',
+      businessName: 'new business'
+    })
+
   })
 
   it('should be able to authenticate JWT', async () => {
+    // first log in the user
     const res = await request(app).post('/users/login').send({
       email: 'john@mail.com',
       password: 'password'
@@ -168,6 +176,7 @@ describe('Users API', () => {
     expect(res.statusCode).toEqual(200)
     expect(res.body.message).toEqual('Successfully logged in.')
 
+    // get the accessToken from login
     const { accessToken } = res.body
     const authenticateResponse = await request(app).get('/users/authenticate').set('Authorization', `Bearer ${accessToken}`)
 

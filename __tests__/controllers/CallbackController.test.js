@@ -1,8 +1,8 @@
-const models = require('../models')
+const models = require('../../models')
 const axios = require('axios')
 jest.mock('axios')
 
-const { getAll, create } = require('../src/controllers/callbacks')
+const { getAll, create } = require('../../src/controllers/callbacks')
 
 const callbacks = [
   {

@@ -1,6 +1,6 @@
-const models = require('../models')
+const models = require('../../models')
 
-const { getAll, create, update } = require('../src/controllers/businesses')
+const { getAll, create, update } = require('../../src/controllers/businesses')
 
 const businesses = [
   {
