@@ -2,7 +2,7 @@ const models = require('../../models')
 const axios = require('axios')
 jest.mock('axios')
 
-const { getAll, create } = require('../../src/controllers/callbacks')
+const { getAll, create, getById } = require('../../src/controllers/callbacks')
 
 const callbacks = [
   {
@@ -27,6 +27,22 @@ describe('Callback controller', () => {
 
     expect(mRes.status).toBeCalledWith(200);
     expect(mRes.json).toBeCalledWith({ callbacks });
+
+    mock.mockRestore()
+  });
+
+  it('should retrieve one callback by ID', async () => {
+    const mock = jest.spyOn(models.Callback, 'findOne').mockResolvedValueOnce(callbacks[0]);
+    const mReq = {
+      params: {
+        id: callbacks[0].id
+      }
+    };
+    const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await getById(mReq, mRes);
+
+    expect(mRes.status).toBeCalledWith(200);
+    expect(mRes.json).toBeCalledWith(callbacks[0]);
 
     mock.mockRestore()
   });

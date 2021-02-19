@@ -3,6 +3,7 @@ const axios = require('axios')
 
 const app = require('../app')
 const models = require('../models')
+jest.mock('../src/middlewares/auth', () => jest.fn((req, res, next) => next()));
 
 jest.mock('axios')
 
@@ -54,7 +55,7 @@ describe('Main API is working', () => {
 })
 
 describe('Callbacks API', () => {
-  it('Should return empty array when there is no data', async () => {
+  it('Should return all callbacks', async () => {
     const res = await request(app).get('/callbacks')
     expect(res.statusCode).toEqual(200)
 
@@ -65,6 +66,19 @@ describe('Callbacks API', () => {
     expect(res.body.callbacks[0].transaction_id).toEqual('123')
     expect(res.body.callbacks[0].virtual_account).toEqual('1234')
     expect(res.body.callbacks[0].callbackResponseCode).toEqual(200)
+  })
+
+  it('Should return callback by id', async () => {
+    const res = await request(app).get('/callbacks/e8980029-04a0-4b9c-8c64-182c8a81cc43')
+    expect(res.statusCode).toEqual(200)
+
+    expect(res.body.bank_code).toEqual('BANK_ABC')
+    expect(res.body.businessId).toEqual('2ca01b01-4d0a-4ae4-ac60-56ff0f952d8f')
+    expect(res.body.id).toEqual('e8980029-04a0-4b9c-8c64-182c8a81cc43')
+    expect(res.body.timestamp).toEqual('2021-02-18T03:13:01.411Z')
+    expect(res.body.transaction_id).toEqual('123')
+    expect(res.body.virtual_account).toEqual('1234')
+    expect(res.body.callbackResponseCode).toEqual(200)
   })
 
   it('Should return be able to create callback', async () => {

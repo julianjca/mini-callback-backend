@@ -16,6 +16,21 @@ module.exports = {
       })
     }
   },
+  async getById (req, res) {
+    const { id } = req.params
+    try {
+      const callback = await models.Callback.findOne({
+        where: {
+          id,
+        }
+      })
+      res.status(200).json(callback)
+    } catch (e) {
+      res.status(500).json({
+        message: 'Failed getting callbacks.'
+      })
+    }
+  },
   async create (req, res) {
     const timestamp = req.body.timestamp
     const payload = { 
