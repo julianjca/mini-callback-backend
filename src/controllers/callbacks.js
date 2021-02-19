@@ -77,5 +77,59 @@ module.exports = {
         message: 'Failed creating callback.'
       })
     }
+  },
+  async retry (req, res) {
+    const { id } = req.params
+    
+    const callback = await models.Callback.findOne({
+      where: {
+        id,
+      }
+    })
+
+    if(!callback) {
+      res.status(400).json({
+        message: 'id is invalid.'
+      })
+      return
+    }
+
+    const business = await models.Business.findOne({
+      where: {
+        id: callback.businessId,
+      }
+    })
+
+    const payload = {
+      ...callback
+    }
+
+
+    try {
+      const { status } = await axios.get(business.businessCallbackUrl)
+      payload.callbackResponseCode = status
+
+    } catch (e) {
+      payload.callbackResponseCode = e.response.status
+    }
+
+
+
+    try {
+      const response = await models.Callback.update(payload, {
+        where: {
+          id,
+        },
+        returning: true,
+      })
+      res.status(200).json({
+        callback: response[1][0],
+        message: 'success retrying callback',
+      })
+    } catch (e) {
+      res.status(500).json({
+        message: 'Failed creating callback.'
+      })
+    }
   }
 }
