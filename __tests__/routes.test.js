@@ -106,6 +106,26 @@ describe('Callbacks API', () => {
     expect(res.body.message).toEqual('business_id is invalid.')
   })
 
+  it('Should be able to retry', async () => {
+    axios.get.mockImplementation(() => Promise.resolve({
+      data: [],
+      status: 400,
+    }))
+    const res = await request(app).put('/callbacks/retry/e8980029-04a0-4b9c-8c64-182c8a81cc43')
+    expect(res.statusCode).toEqual(200)
+    expect(res.body.message).toEqual("success retrying callback")
+  })
+
+  it('Should failed to retry when callback id is invalid', async () => {
+    axios.get.mockImplementation(() => Promise.resolve({
+      data: [],
+      status: 400,
+    }))
+    const res = await request(app).put('/callbacks/retry/e8980029-04a0-4b9c-8c64-182c8a81cc41')
+    expect(res.statusCode).toEqual(400)
+    expect(res.body.message).toEqual("id is invalid.")
+  })
+
   it('Should create a callback with callbackResponseCode 400', async () => {
     axios.get.mockImplementation(() => Promise.reject({
       data: [],

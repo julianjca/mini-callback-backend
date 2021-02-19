@@ -2,7 +2,7 @@ const models = require('../../models')
 const axios = require('axios')
 jest.mock('axios')
 
-const { getAll, create, getById } = require('../../src/controllers/callbacks')
+const { getAll, create, getById, retry } = require('../../src/controllers/callbacks')
 
 const callbacks = [
   {
@@ -167,6 +167,55 @@ describe('Callback controller', () => {
     await create(mReq, mRes);
     
     expect(mRes.status).toBeCalledWith(200);
+
+    mock.mockRestore()
+    businessMock.mockRestore()
+  });
+
+  it('should retry a callback.', async () => {
+    axios.get.mockImplementation(() => Promise.reject({ response: {
+      status: 200
+    }}))
+
+    const mock = jest.spyOn(models.Callback, 'findOne').mockImplementationOnce(() => Promise.resolve(true));
+    const mockUpdate = jest.spyOn(models.Callback, 'update').mockImplementationOnce(() => Promise.resolve());
+
+    const businessMock = jest.spyOn(models.Business, 'findOne').mockImplementationOnce(() => Promise.resolve( true ));
+
+    const mReq = {
+      params: {
+        id: 'e8980029-04a0-4b9c-8c64-182c8a81cc43'
+      }
+    };
+
+    const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await retry(mReq, mRes);
+    
+    expect(mRes.status).toBeCalledWith(200);
+
+    mock.mockRestore()
+    businessMock.mockRestore()
+    mockUpdate.mockRestore()
+  });
+
+  it('should failed to retry a callback.', async () => {
+    axios.get.mockImplementation(() => Promise.reject({ response: {
+      status: 200
+    }}))
+
+    const mock = jest.spyOn(models.Callback, 'findOne').mockImplementationOnce(() => Promise.resolve(false));
+    const businessMock = jest.spyOn(models.Business, 'findOne').mockImplementationOnce(() => Promise.resolve( true ));
+
+    const mReq = {
+      params: {
+        id: 'e8980029-04a0-4b9c-8c64-182c8a81cc43'
+      }
+    };
+
+    const mRes = { status: jest.fn().mockReturnThis(), json: jest.fn() };
+    await retry(mReq, mRes);
+    
+    expect(mRes.status).toBeCalledWith(400);
 
     mock.mockRestore()
     businessMock.mockRestore()
